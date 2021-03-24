@@ -6,7 +6,7 @@
 /*   By: dthan <dthan@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/19 04:00:14 by dthan             #+#    #+#             */
-/*   Updated: 2021/03/19 21:42:07 by rklein           ###   ########.fr       */
+/*   Updated: 2021/03/24 14:06:22 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,7 @@ void			delete_save_history(void);
 void			append_history(void);
 void			get_history(int fd);
 char			*ft_process_history(t_l *l);
+void			ft_check_ctrld_hist(char **line, char buffer[]);
 int				ft_check_continue_hist(char buf[]);
 int				ft_check_cont(char *buffer);
 

@@ -6,7 +6,7 @@
 /*   By: dthan <dthan@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/21 10:55:32 by rklein            #+#    #+#             */
-/*   Updated: 2021/03/20 15:44:30 by rklein           ###   ########.fr       */
+/*   Updated: 2021/03/24 14:08:02 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,3 +40,66 @@ int			ft_check_continue_hist(char buf[])
 	}
 	return (i == 0 || ch == 1 ? -1 : i);
 }
+
+void	ft_check_ctrld_hist(char **line, char buffer[])
+{
+	int		len;
+	char	*ptr;
+	char	*tmp;
+
+	tmp = *line;
+	/*if (*line[0] == 4)
+	{
+		ft_bzero(buffer, 4096);
+		len = ft_strlen(&tmp[1]);
+		ft_memmove(tmp, &tmp[1], len);
+		tmp[len] = '\0';
+	}*/
+	if ((ptr = ft_strchr(tmp, 4)))
+	{	
+		ptr++;
+		ft_bzero(buffer, 4096);
+		len = ft_strlen(ptr);
+		ft_memmove(tmp, ptr, len);
+		tmp[len] = '\0';
+	}
+	*line = tmp;
+}
+
+/*void	ft_check_ctrld_hist(char **line, char buffer[], int *index)
+{
+	int		len;
+	int		i;
+	char	*ptr;
+	char	*tmp;
+
+	tmp = *line;
+	i = *index;
+
+	if (*line[0] == 4)
+	{
+		ft_strcat(buffer, "\x04\n");
+		g_shell.history->hist[i++] = ft_strdup(buffer);
+		g_shell.history->curr = i;
+		ft_bzero(buffer, 4096);
+		len = ft_strlen(&tmp[1]);
+		ft_memmove(tmp, &tmp[1], len);
+		tmp[len] = '\0';
+	}
+	if ((ptr = ft_strchr(tmp, 4)))
+	{	
+		ptr++;
+		ft_strncat(buffer, tmp, (ptr - tmp) - 1);
+		ft_strcat(buffer, "\x04\n");
+		g_shell.history->hist[i++] = ft_strdup(buffer);
+		g_shell.history->curr = i;
+		ft_bzero(buffer, 4096);
+		len = ft_strlen(ptr);
+		ft_memmove(tmp, ptr, len);
+		tmp[len] = '\0';
+		if (tmp[len - 1] ==  4)
+			write(1, "!!END!!", 7); 
+	}
+	*index = i;
+	*line = tmp;
+}*/

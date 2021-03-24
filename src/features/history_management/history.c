@@ -6,13 +6,40 @@
 /*   By: dthan <dthan@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/04/20 00:22:24 by ihwang            #+#    #+#             */
-/*   Updated: 2021/03/20 18:29:16 by dthan            ###   ########.fr       */
+/*   Updated: 2021/03/24 14:05:03 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "shell.h"
 
 static int	read_history_file(int fd)
+{
+	char	*line;
+	char	buffer[4096];
+	int		i;
+	int		end_pos;
+
+	ft_bzero(buffer, 4096);
+	i = 0;
+	while (get_next_line(fd, &line) && i < HISTFILESIZE)
+	{
+		ft_check_ctrld_hist(&line, buffer);
+		ft_strcat(buffer, line);
+		if ((end_pos = ft_check_continue_hist(buffer)) != -1)
+		{
+			ft_strcat(buffer, "\n");
+			g_shell.history->hist[i++] = ft_strdup(buffer);
+			g_shell.history->curr = i;
+			ft_bzero(buffer, 4096);
+		}
+		else
+			ft_strcat(buffer, "\n");
+		free(line);
+	}
+	return (i);
+}
+
+/*static int	read_history_file(int fd)
 {
 	char	*line;
 	char	buffer[2][4096];
@@ -38,7 +65,7 @@ static int	read_history_file(int fd)
 		free(line);
 	}
 	return (i);
-}
+}*/
 
 void		get_history(int fd)
 {
