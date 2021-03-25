@@ -6,7 +6,7 @@
 /*   By: dthan <dthan@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/21 10:55:32 by rklein            #+#    #+#             */
-/*   Updated: 2021/03/20 15:44:30 by rklein           ###   ########.fr       */
+/*   Updated: 2021/03/26 00:05:23 by dthan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,9 +23,13 @@ int			ft_check_continue_hist(char buf[])
 	{
 		if (buf[i] == 4)
 			return (i);
+		else if (buf[i] == '\n')
+			return (i);
 		if (is_inhibitors(&buf[i], i, buf[i]))
 		{
 			if (jump_quote(buf, &i, buf[i]) == EXIT_FAILURE)
+				return (i);
+			if (buf[i] == '\0')
 				return (-1);
 		}
 		else if (ft_strnequ(&buf[i], "&&", 2) || ft_strnequ(&buf[i], "||", 2))
