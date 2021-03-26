@@ -6,7 +6,7 @@
 /*   By: dthan <dthan@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/04/20 00:22:24 by ihwang            #+#    #+#             */
-/*   Updated: 2021/03/28 15:25:24 by dthan            ###   ########.fr       */
+/*   Updated: 2021/03/28 15:26:38 by dthan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,7 @@ Algorithm for reading history file:
 
 	4. free the instance.line to keep reading new line
 
+DEMO
 read_history_file()
 {
 	t_read_history_file instance;
@@ -65,6 +66,10 @@ read_history_file()
 			g_shell.history->curr = i;
 			ft_strcpy(instance.buff_read, &buff_read[instance.pos + 1]);
 			instance.pos = 0;
+			if (instance.buff_write[ft_strlen(instance.buff_write)] == 4)
+				need to copy the nex one to the history, since there is sth still in the buff_write like that abc\n
+				so we take it into the history container, becarefull well checking with the return i for history container
+				since it could be making +i more for i
 		}
 		else
 		{
@@ -107,6 +112,8 @@ int is_logical_operators_or_pipe_operator(char *str, int *i)
 	return 0;
 }
 
+
+DEMO
 int is_continuing_read_line(char *buff_read, int *pos, int isContinue)
 {
 	while (str[(*pos)])
