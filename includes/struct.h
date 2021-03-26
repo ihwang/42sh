@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   struct.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ihwang <ihwang@student.hive.fi>            +#+  +:+       +#+        */
+/*   By: dthan <dthan@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/26 11:18:23 by dthan             #+#    #+#             */
-/*   Updated: 2021/03/23 21:47:43 by tango            ###   ########.fr       */
+/*   Updated: 2021/03/26 23:50:17 by dthan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -389,6 +389,17 @@ typedef struct			s_history
 	int					hstsize;
 	char				savedfile[256];
 }						t_history;
+
+typedef struct			s_read_history_file
+{
+	char				*line_read;
+	char				buff_read[4096];
+	char				buff_write[4096];
+	int					pos;
+	int					cont;
+	int					hst_size;
+	char				quote_type;
+}						t_read_history_file;
 
 /*
 ** struct for options in builtin

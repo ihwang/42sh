@@ -219,6 +219,8 @@ JOB_CONTROL := $(addprefix $(JOB_CONTROL_DIR)/,$(JOB_CONTROL_FILE))
 # History Management
 HISTORY_MANAGEMENT_DIR := $(FEATURES_DIR)/history_management
 HISTORY_MANAGEMENT_FILE += history.c
+HISTORY_MANAGEMENT_FILE += read_history_file.c
+HISTORY_MANAGEMENT_FILE += read_history_file_utils.c
 HISTORY_MANAGEMENT_FILE += history_exp.c
 HISTORY_MANAGEMENT_FILE += history_exp_utils.c
 HISTORY_MANAGEMENT_FILE += history_input_check.c
