@@ -6,7 +6,7 @@
 /*   By: dthan <dthan@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/04/20 00:22:24 by ihwang            #+#    #+#             */
-/*   Updated: 2021/03/26 09:34:37 by dthan            ###   ########.fr       */
+/*   Updated: 2021/03/26 21:16:55 by dthan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -155,33 +155,151 @@ int is_continuing_read_line(char *buff_read, int *pos, int isContinue)
 
 */
 
-static int	read_history_file(int fd)
+typedef struct s_read_history_file
 {
-	char	*line;
-	char	buffer[2][4096];
-	int		i;
-	int		end_pos;
+	char	*line_read;
+	char	buff_read[4096];
+	char	buff_write[4096];
+	int		pos;
+	int		cont;
+	int		hst_size;
+}		t_read_history_file;
 
-	ft_bzero(buffer[0], 4096);
-	i = 0;
-	while (get_next_line(fd, &line) && i < HISTFILESIZE)
-	{
-		ft_strcat(buffer[0], line);
-		if ((end_pos = ft_check_continue_hist(buffer[0])) != -1)
-		{
-			ft_bzero(buffer[1], 4096);
-			ft_strncpy(buffer[1], buffer[0], end_pos + 1);
-			if (buffer[0][end_pos] != 4 && buffer[0][end_pos] != '\n')
-				ft_strcat(buffer[1], "\n");
-			g_shell.history->hist[i++] = ft_strdup(buffer[1]);
-			g_shell.history->curr = i;
-			ft_strcpy(buffer[0], &buffer[0][end_pos + 1]);
-		}
-		ft_strcat(buffer[0], "\n");
-		free(line);
-	}
-	return (i);
+void init_read_history_struct(t_read_history_file *self)
+{
+	self->line_read = NULL;
+	ft_bzero(self->buff_read, 4096);
+	ft_bzero(self->buff_write, 4096);
+	self->pos = 0;
+	self->cont = 1;
+	self->hst_size = 0;
 }
+
+int is_logical_operators_or_pipe_operator(char *str, int *i)
+{
+	if (ft_strnequ(str, "&&", 2) || ft_strnequ(str, "||", 2))
+	{
+		(*i)++;
+		return 1;
+	}
+	else if (ft_strnequ(str, "|", 1))
+	{
+		return 1;
+	}
+	return 0;
+}
+
+int		jump_quote2(char *input, int *i, char quote_type)
+{
+	if (quote_type == '\\')
+		(*i)++;
+	else if (quote_type == '"' || quote_type == '\'')
+	{
+		(*i)++;
+		while (input[*i])
+		{
+			if (input[*i] == quote_type && is_real_character(input, *i))
+				break ;
+			else if (input[*i] == 4)
+				return (EXIT_FAILURE);
+			(*i)++;
+		}
+	}
+	if (input[*i] == '\0')
+		return (EXIT_FAILURE);
+	return (EXIT_SUCCESS);
+}
+
+int is_continuing_read_line(char *buff_read, int *pos, int isContinue)
+{
+	while (buff_read[(*pos)])
+	{
+		if (buff_read[*pos] == 4)
+			return 0;
+		else if (buff_read[*pos] == '\n')
+			return (isContinue) ? 1 : 0;
+		else if (is_inhibitors(buff_read, *pos, buff_read[*pos]))
+		{
+			if (jump_quote2(buff_read, pos, buff_read[*pos]) == EXIT_FAILURE)
+				return 1;
+			if (isContinue)
+				isContinue = 0;
+		}
+		else if (is_logical_operators_or_pipe_operator(&buff_read[*pos], pos))
+			isContinue = 1;
+		else if (!ft_isspace(buff_read[*pos]) && isContinue)
+			isContinue = 0;
+		(*pos)++;
+	}
+	return (isContinue);
+}
+
+void add_command_into_history(t_read_history_file *self)
+{
+	ft_bzero(self->buff_write, 4096);
+	ft_strncpy(self->buff_write, self->buff_read, self->pos + 1);
+	g_shell.history->hist[self->hst_size++] = ft_strdup(self->buff_write);
+	g_shell.history->curr = self->hst_size;
+	ft_strcpy(self->buff_read, &(self->buff_read)[self->pos + 1]);
+	self->pos = 0;
+}
+
+int read_history_file(int fd)
+{
+	t_read_history_file instance;
+
+	init_read_history_struct(&instance);
+	while (get_next_line(fd, &(instance.line_read)) && instance.hst_size < (HISTFILESIZE - 1))
+	{
+		ft_strcat(instance.buff_read, instance.line_read);
+		ft_strcat(instance.buff_read, "\n");
+		if ((instance.cont = is_continuing_read_line(instance.buff_read, &(instance.pos), instance.cont)) == 0)
+		{
+			add_command_into_history(&instance);
+			if (instance.buff_write[ft_strlen(instance.buff_write) - 1] == 4)
+			{
+				if ((instance.cont = is_continuing_read_line(instance.buff_read, &(instance.pos), instance.cont)) == 0)
+					add_command_into_history(&instance);
+				else if (instance.buff_read[instance.pos] != '\0')
+					instance.pos++;
+			}
+		}
+		else if (instance.buff_read[instance.pos] != '\0')
+			instance.pos++;
+		free(instance.line_read);
+		instance.line_read = NULL;
+	}
+	(instance.line_read) ? free(instance.line_read) : 0;
+	return (instance.hst_size);
+}
+
+// static int	read_history_file(int fd)
+// {
+// 	char	*line;
+// 	char	buffer[2][4096];
+// 	int		i;
+// 	int		end_pos;
+
+// 	ft_bzero(buffer[0], 4096);
+// 	i = 0;
+// 	while (get_next_line(fd, &line) && i < HISTFILESIZE)
+// 	{
+// 		ft_strcat(buffer[0], line);
+// 		if ((end_pos = ft_check_continue_hist(buffer[0])) != -1)
+// 		{
+// 			ft_bzero(buffer[1], 4096);
+// 			ft_strncpy(buffer[1], buffer[0], end_pos + 1);
+// 			if (buffer[0][end_pos] != 4 && buffer[0][end_pos] != '\n')
+// 				ft_strcat(buffer[1], "\n");
+// 			g_shell.history->hist[i++] = ft_strdup(buffer[1]);
+// 			g_shell.history->curr = i;
+// 			ft_strcpy(buffer[0], &buffer[0][end_pos + 1]);
+// 		}
+// 		ft_strcat(buffer[0], "\n");
+// 		free(line);
+// 	}
+// 	return (i);
+// }
 
 void		get_history(int fd)
 {
