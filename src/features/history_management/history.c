@@ -6,24 +6,11 @@
 /*   By: dthan <dthan@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/04/20 00:22:24 by ihwang            #+#    #+#             */
-/*   Updated: 2021/03/28 15:30:28 by dthan            ###   ########.fr       */
+/*   Updated: 2021/03/28 15:31:19 by dthan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "shell.h"
-
-// void		get_history(int fd)
-// {
-// 	int		i;
-
-// 	fd = open(g_shell.history->savedfile, O_RDWR | O_CREAT, 0644);
-// 	i = read_history_file(fd);
-// 	g_shell.history->hst = g_shell.history->curr;
-// 	g_shell.history->hist[i++] = ft_strnew(0);
-// 	g_shell.history->hist[i] = NULL;
-// 	g_shell.history->hstsize = HISTFILESIZE;
-// 	close(fd);
-// }
 
 void		get_history(int fd)
 {

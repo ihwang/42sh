@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   read_history_file.c                                :+:      :+:    :+:   */
+/*   read_file.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: dthan <dthan@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/26 23:37:02 by dthan             #+#    #+#             */
-/*   Updated: 2021/03/27 21:58:18 by dthan            ###   ########.fr       */
+/*   Updated: 2021/03/28 01:16:27 by dthan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,7 +74,8 @@
 **		is_continue = 0;
 */
 
-static void	add_command_into_history(t_read_history_file *self, char **container)
+static void	add_command_into_container(
+	t_read_history_file *self, char **container)
 {
 	ft_bzero(self->buff_write, 4096);
 	ft_strncpy(self->buff_write, self->buff_read, self->pos + 1);
@@ -134,20 +135,21 @@ static int	is_continuing_read_line(
 		buff_read, pos, is_continue, in_quotation));
 }
 
-static void	read_line_from_history_file(t_read_history_file *self, char **container)
+static void	analyzing_the_collected_line(
+	t_read_history_file *self, char **container)
 {
 	ft_strcat(self->buff_read, self->line_read);
 	ft_strcat(self->buff_read, "\n");
 	if ((self->cont = is_continuing_read_line(
 		self->buff_read, &(self->pos), self->cont, &(self->quote_type))) == 0)
 	{
-		add_command_into_history(self, container);
+		add_command_into_container(self, container);
 		if (self->buff_write[ft_strlen(self->buff_write) - 1] == 4)
 		{
 			if ((self->cont = is_continuing_read_line(
 					self->buff_read, &(self->pos),
 					self->cont, &(self->quote_type))) == 0)
-				add_command_into_history(self, container);
+				add_command_into_container(self, container);
 			else if (self->buff_read[self->pos] != '\0')
 				(self->pos)++;
 		}
@@ -155,27 +157,6 @@ static void	read_line_from_history_file(t_read_history_file *self, char **contai
 	else if (self->buff_read[self->pos] != '\0')
 		(self->pos)++;
 	ft_strdel(&(self->line_read));
-}
-
-int is_line_containing_tab(char *str)
-{
-	int i;
-
-	i = -1;
-	while (str[++i])
-		if (str[i] == '\t')
-			return (1);
-	return (0);
-}
-
-void replace_line_containing_tab_with_space(char *str)
-{
-	int i;
-
-	i = -1;
-	while (str[++i])
-		if (str[i] == '\t')
-			str[i] = ' ';
 }
 
 int			read_commands_from_a_file(int fd, char **container)
@@ -188,12 +169,12 @@ int			read_commands_from_a_file(int fd, char **container)
 	{
 		if (is_line_containing_tab(instance.line_read))
 			replace_line_containing_tab_with_space(instance.line_read);
-		read_line_from_history_file(&instance, container);
+		analyzing_the_collected_line(&instance, container);
 	}
 	if (ft_strlen(instance.buff_read) > 0)
 	{
 		ft_strcat(instance.buff_read, EOF_VALUE);
-		add_command_into_history(&instance, container);
+		add_command_into_container(&instance, container);
 	}
 	(instance.line_read) ? free(instance.line_read) : 0;
 	return (instance.hst_size);

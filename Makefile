@@ -220,11 +220,11 @@ JOB_CONTROL := $(addprefix $(JOB_CONTROL_DIR)/,$(JOB_CONTROL_FILE))
 # History Management
 HISTORY_MANAGEMENT_DIR := $(FEATURES_DIR)/history_management
 HISTORY_MANAGEMENT_FILE += history.c
-HISTORY_MANAGEMENT_FILE += read_history_file.c
-HISTORY_MANAGEMENT_FILE += read_history_file_utils.c
+HISTORY_MANAGEMENT_FILE += read_file.c
+HISTORY_MANAGEMENT_FILE += read_file_utils.c
+HISTORY_MANAGEMENT_FILE += read_file_utils2.c
 HISTORY_MANAGEMENT_FILE += history_exp.c
 HISTORY_MANAGEMENT_FILE += history_exp_utils.c
-HISTORY_MANAGEMENT_FILE += history_input_check.c
 HISTORY_MANAGEMENT := $(addprefix $(HISTORY_MANAGEMENT_DIR)/,$(HISTORY_MANAGEMENT_FILE))
 # Arithmetic Expansion
 ARITHMETIC_EXPANSION_DIR := $(FEATURES_DIR)/arithmetic_expansion
