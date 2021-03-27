@@ -6,7 +6,7 @@
 /*   By: dthan <dthan@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/19 04:00:14 by dthan             #+#    #+#             */
-/*   Updated: 2021/03/26 23:55:06 by dthan            ###   ########.fr       */
+/*   Updated: 2021/03/27 16:43:51 by dthan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ int		ft_check_cont(char *buffer);
 ** Read history file
 */
 
-int		read_history_file(int fd);
+int		read_commands_from_a_file(int fd, char **container);
 void	init_read_history_struct(t_read_history_file *self);
 int		is_logical_operators_or_pipe_operator(char *str, int *i);
 int		jump_quote3(char *input, int *i, char quote_type);

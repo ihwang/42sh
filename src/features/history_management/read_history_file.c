@@ -6,7 +6,7 @@
 /*   By: dthan <dthan@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/26 23:37:02 by dthan             #+#    #+#             */
-/*   Updated: 2021/03/27 00:17:01 by dthan            ###   ########.fr       */
+/*   Updated: 2021/03/27 16:43:24 by dthan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,12 +74,11 @@
 **		is_continue = 0;
 */
 
-static void	add_command_into_history(t_read_history_file *self)
+static void	add_command_into_history(t_read_history_file *self, char **container)
 {
 	ft_bzero(self->buff_write, 4096);
 	ft_strncpy(self->buff_write, self->buff_read, self->pos + 1);
-	g_shell.history->hist[self->hst_size++] = ft_strdup(self->buff_write);
-	g_shell.history->curr = self->hst_size;
+	container[self->hst_size++] = ft_strdup(self->buff_write);
 	ft_strcpy(self->buff_read, &(self->buff_read)[self->pos + 1]);
 	self->pos = 0;
 }
@@ -135,20 +134,20 @@ static int	is_continuing_read_line(
 		buff_read, pos, is_continue, in_quotation));
 }
 
-static void	read_line_from_history_file(t_read_history_file *self)
+static void	read_line_from_history_file(t_read_history_file *self, char **container)
 {
 	ft_strcat(self->buff_read, self->line_read);
 	ft_strcat(self->buff_read, "\n");
 	if ((self->cont = is_continuing_read_line(
 		self->buff_read, &(self->pos), self->cont, &(self->quote_type))) == 0)
 	{
-		add_command_into_history(self);
+		add_command_into_history(self, container);
 		if (self->buff_write[ft_strlen(self->buff_write) - 1] == 4)
 		{
 			if ((self->cont = is_continuing_read_line(
 					self->buff_read, &(self->pos),
 					self->cont, &(self->quote_type))) == 0)
-				add_command_into_history(self);
+				add_command_into_history(self, container);
 			else if (self->buff_read[self->pos] != '\0')
 				(self->pos)++;
 		}
@@ -158,7 +157,7 @@ static void	read_line_from_history_file(t_read_history_file *self)
 	ft_strdel(&(self->line_read));
 }
 
-int			read_history_file(int fd)
+int			read_commands_from_a_file(int fd, char **container)
 {
 	t_read_history_file instance;
 
@@ -166,7 +165,7 @@ int			read_history_file(int fd)
 	while (get_next_line(fd, &(instance.line_read)) &&
 			instance.hst_size < (HISTFILESIZE - 1))
 	{
-		read_line_from_history_file(&instance);
+		read_line_from_history_file(&instance, container);
 	}
 	(instance.line_read) ? free(instance.line_read) : 0;
 	return (instance.hst_size);
