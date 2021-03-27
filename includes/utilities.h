@@ -6,7 +6,7 @@
 /*   By: ihwang <ihwang@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/04/13 11:35:45 by dthan             #+#    #+#             */
-/*   Updated: 2021/03/20 03:05:37 by ihwang           ###   ########.fr       */
+/*   Updated: 2021/03/27 20:26:01 by rklein           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,5 +43,6 @@ long long	ft_atolli_check(const char *str, char *stat);
 int			is_number_str(char *str);
 char		*ft_strrev(char *str);
 int			ft_findchr(char *str, int c);
+int			ft_isspace_str(char *str);
 
 #endif
