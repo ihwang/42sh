@@ -6,7 +6,7 @@
 /*   By: dthan <dthan@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/22 14:30:35 by dthan             #+#    #+#             */
-/*   Updated: 2021/03/20 16:17:03 by rklein           ###   ########.fr       */
+/*   Updated: 2021/03/27 16:27:30 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -125,7 +125,43 @@ static void	fc_e_editing_process(char *editor)
 **		6. execute and change the command with g_shell.history->tmp
 */
 
+static void		fc_e_execution_loop(char *cmd[])
+{
+	int	i;
+
+	i = -1
+	while (cmd[++i])
+	{
+		if (g_shell.history->tmp)
+			free(g_shell.history->tmp);
+		g_shell.history->tmp = cmd[i];
+		ft_printf("%s", cmd[i]);
+		ft_fc_execute(cmd[i]);
+	}
+}
+
 int			fc_e_op(int ops, char *editor, char *first, char *last)
+{
+	char	*cmd[52];
+	int		r_ind[2];
+	int		fd;
+
+	if (fc_check_editor(editor) == EXIT_FAILURE)
+		return (EXIT_FAILURE);
+	if (fc_e_init_range(r_ind, first, last) == EXIT_FAILURE)
+		return (EXIT_FAILURE);
+	if (ops & FC_R_OP)
+		ft_swap_int(&r_ind[0], &r_ind[1]);
+	fd = open(FC_EDITING_FILE, O_CREAT | O_TRUNC | O_WRONLY, 0644);
+	fc_e_copy_lines_into_editor(fd, r_ind);
+	close(fd);
+	fc_e_editing_process(editor);
+	fc_e_build_cmd(cmd);
+	fc_e_execution_loop(cmd);
+	return (EXIT_SUCCESS);
+}
+
+/*int			fc_e_op(int ops, char *editor, char *first, char *last)
 {
 	char	*cmd;
 	int		r_ind[2];
@@ -148,4 +184,4 @@ int			fc_e_op(int ops, char *editor, char *first, char *last)
 	ft_printf("%s", cmd);
 	ft_fc_execute(cmd);
 	return (EXIT_SUCCESS);
-}
+}*/
