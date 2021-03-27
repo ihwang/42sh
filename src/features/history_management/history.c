@@ -6,7 +6,7 @@
 /*   By: dthan <dthan@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/04/20 00:22:24 by ihwang            #+#    #+#             */
-/*   Updated: 2021/03/20 18:29:16 by dthan            ###   ########.fr       */
+/*   Updated: 2021/03/27 21:02:05 by rklein           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,17 +40,23 @@ static int	read_history_file(int fd)
 	return (i);
 }
 
-void		get_history(int fd)
+int			get_history(int fd)
 {
 	int		i;
 
 	fd = open(g_shell.history->savedfile, O_RDWR | O_CREAT, 0644);
+	if (fd == -1)
+	{
+		ft_printf("42sh: Fatal error: .history: Permission denied\n");
+		return (EXIT_FAILURE);
+	}
 	i = read_history_file(fd);
 	g_shell.history->hst = g_shell.history->curr;
 	g_shell.history->hist[i++] = ft_strnew(0);
 	g_shell.history->hist[i] = NULL;
 	g_shell.history->hstsize = HISTFILESIZE;
 	close(fd);
+	return (EXIT_SUCCESS);
 }
 
 static void	append_history_realloc(void)

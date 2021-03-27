@@ -6,7 +6,7 @@
 /*   By: dthan <dthan@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/12 23:20:08 by dthan             #+#    #+#             */
-/*   Updated: 2021/03/21 18:19:07 by dthan            ###   ########.fr       */
+/*   Updated: 2021/03/27 20:58:45 by rklein           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,6 +67,7 @@ int	init_history_stuff(void)
 	ft_bzero(g_shell.history->savedfile, 256);
 	getcwd(g_shell.history->savedfile, 256);
 	ft_strcat(g_shell.history->savedfile, "/.history");
-	get_history(0);
+	if (get_history(0) == EXIT_FAILURE)
+		return (EXIT_FAILURE);
 	return (EXIT_SUCCESS);
 }
