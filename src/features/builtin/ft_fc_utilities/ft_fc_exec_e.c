@@ -6,39 +6,19 @@
 /*   By: dthan <dthan@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/22 14:30:35 by dthan             #+#    #+#             */
-/*   Updated: 2021/03/27 16:27:30 by marvin           ###   ########.fr       */
+/*   Updated: 2021/03/27 17:35:10 by dthan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "shell.h"
 
-static char	*fc_e_build_cmd(void)
+static void	fc_e_build_cmd(char **container)
 {
 	int		fd;
-	char	*line;
-	char	buffer[2][4096];
-	int		end_pos;
 
-	ft_bzero(buffer[0], 4096);
-	ft_bzero(buffer[1], 4096);
 	fd = open(FC_EDITING_FILE, O_RDONLY, 0644);
-	while (get_next_line(fd, &line))
-	{
-		ft_strcat(buffer[0], line);
-		if ((end_pos = ft_check_continue_hist(buffer[0])) != -1 && line[0])
-		{
-			if (buffer[1][0])
-				ft_strcat(buffer[1], ";");
-			ft_strncat(buffer[1], buffer[0], end_pos + 1);
-			ft_strcpy(buffer[0], &buffer[0][end_pos]);
-		}
-		else if (line[0])
-			ft_strcat(buffer[0], "\n");
-		free(line);
-	}
+	read_commands_from_a_file(fd, container);	
 	close(fd);
-	ft_strcat(buffer[1], "\n");
-	return (ft_strdup(buffer[1]));
 }
 
 static int	fc_e_init_range(int *r_ind, char *first, char *last)
@@ -129,11 +109,11 @@ static void		fc_e_execution_loop(char *cmd[])
 {
 	int	i;
 
-	i = -1
+	i = -1;
+	if (g_shell.history->tmp)
+		free(g_shell.history->tmp);
 	while (cmd[++i])
 	{
-		if (g_shell.history->tmp)
-			free(g_shell.history->tmp);
 		g_shell.history->tmp = cmd[i];
 		ft_printf("%s", cmd[i]);
 		ft_fc_execute(cmd[i]);
@@ -156,6 +136,7 @@ int			fc_e_op(int ops, char *editor, char *first, char *last)
 	fc_e_copy_lines_into_editor(fd, r_ind);
 	close(fd);
 	fc_e_editing_process(editor);
+	ft_bzero(cmd, 52);
 	fc_e_build_cmd(cmd);
 	fc_e_execution_loop(cmd);
 	return (EXIT_SUCCESS);
