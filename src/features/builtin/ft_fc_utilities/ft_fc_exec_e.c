@@ -6,7 +6,7 @@
 /*   By: dthan <dthan@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/22 14:30:35 by dthan             #+#    #+#             */
-/*   Updated: 2021/03/27 17:35:10 by dthan            ###   ########.fr       */
+/*   Updated: 2021/03/27 21:56:59 by dthan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,16 +43,14 @@ static int	fc_e_init_range(int *r_ind, char *first, char *last)
 
 static void	fc_e_copy_lines_into_editor(int fd, int *r_ind)
 {
-	char	*format;
-
 	if (r_ind[0] < r_ind[1])
 	{
 		while (r_ind[0] < r_ind[1])
 		{
-			format = ft_strndup(g_shell.history->hist[r_ind[0] - 1], \
-			(int)ft_strlen(g_shell.history->hist[r_ind[0] - 1]) - 1);
-			ft_dprintf(fd, "%s\n", format);
-			ft_strdel(&format);
+			if (g_shell.history->hist[r_ind[0] - 1][ft_strlen(g_shell.history->hist[r_ind[0] - 1]) - 1] == 4)
+				write(fd, g_shell.history->hist[r_ind[0] - 1], ft_strlen(g_shell.history->hist[r_ind[0] - 1]) - 1);
+			else
+				ft_dprintf(fd, "%s", g_shell.history->hist[r_ind[0] - 1]);
 			r_ind[0]++;
 		}
 	}
@@ -60,10 +58,10 @@ static void	fc_e_copy_lines_into_editor(int fd, int *r_ind)
 	{
 		while (r_ind[0] > r_ind[1])
 		{
-			format = ft_strndup(g_shell.history->hist[r_ind[0] - 1], \
-			(int)ft_strlen(g_shell.history->hist[r_ind[0] - 1]) - 1);
-			ft_dprintf(fd, "%s\n", format);
-			ft_strdel(&format);
+			if (g_shell.history->hist[r_ind[0] - 1][ft_strlen(g_shell.history->hist[r_ind[0] - 1]) - 1] == 4)
+				write(fd, g_shell.history->hist[r_ind[0] - 1], ft_strlen(g_shell.history->hist[r_ind[0] - 1]) - 1);
+			else
+				ft_dprintf(fd, "%s", g_shell.history->hist[r_ind[0] - 1]);
 			r_ind[0]--;
 		}
 	}
@@ -111,12 +109,13 @@ static void		fc_e_execution_loop(char *cmd[])
 
 	i = -1;
 	if (g_shell.history->tmp)
-		free(g_shell.history->tmp);
+		ft_strdel(&(g_shell.history->tmp));
 	while (cmd[++i])
 	{
 		g_shell.history->tmp = cmd[i];
 		ft_printf("%s", cmd[i]);
 		ft_fc_execute(cmd[i]);
+		(g_shell.history->tmp != NULL) ? append_history() : 0;
 	}
 }
 

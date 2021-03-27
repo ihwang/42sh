@@ -6,7 +6,7 @@
 /*   By: dthan <dthan@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/26 23:37:02 by dthan             #+#    #+#             */
-/*   Updated: 2021/03/27 17:32:51 by dthan            ###   ########.fr       */
+/*   Updated: 2021/03/27 21:58:18 by dthan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -157,6 +157,27 @@ static void	read_line_from_history_file(t_read_history_file *self, char **contai
 	ft_strdel(&(self->line_read));
 }
 
+int is_line_containing_tab(char *str)
+{
+	int i;
+
+	i = -1;
+	while (str[++i])
+		if (str[i] == '\t')
+			return (1);
+	return (0);
+}
+
+void replace_line_containing_tab_with_space(char *str)
+{
+	int i;
+
+	i = -1;
+	while (str[++i])
+		if (str[i] == '\t')
+			str[i] = ' ';
+}
+
 int			read_commands_from_a_file(int fd, char **container)
 {
 	t_read_history_file instance;
@@ -165,6 +186,8 @@ int			read_commands_from_a_file(int fd, char **container)
 	while (get_next_line(fd, &(instance.line_read)) &&
 			instance.hst_size < (HISTFILESIZE - 1))
 	{
+		if (is_line_containing_tab(instance.line_read))
+			replace_line_containing_tab_with_space(instance.line_read);
 		read_line_from_history_file(&instance, container);
 	}
 	if (ft_strlen(instance.buff_read) > 0)
