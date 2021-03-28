@@ -6,7 +6,7 @@
 /*   By: rklein <rklein@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/25 08:36:54 by rklein            #+#    #+#             */
-/*   Updated: 2021/03/01 10:29:30 by rklein           ###   ########.fr       */
+/*   Updated: 2021/03/28 14:35:22 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,25 +66,25 @@ int		ft_bracket_check(char *exp, int qc)
 {
 	char	stack[1024];
 	int		q;
-	int		i;
+	int		i[2];
 
 	ft_bzero(stack, 1024);
-	i = 0;
+	i[0] = 0;
+	i[1] = -1;
 	q = 0;
-	while (*exp)
+	while (exp[++i[1]])
 	{
-		if (*exp == 34)
+		if (exp[i[1]] == 34 && is_inhibitors(exp, i[1], exp[i[1]]))
 			q = q ? 0 : 1;
-		if ((*exp == '(' && !qc) || (*exp == '(' && (qc && !q)))
-			stack[i++] = *exp;
-		else if ((*exp == ')' && !qc) || (*exp == ')' && (qc && !q)))
+		if ((exp[i[1]] == '(' && !qc) || (exp[i[1]] == '(' && (qc && !q)))
+			stack[i[0]++] = exp[i[1]];
+		else if ((exp[i[1]] == ')' && !qc) || (exp[i[1]] == ')' && (qc && !q)))
 		{
-			if (i > 0 && stack[i - 1] == '(')
-				stack[--i] = '\0';
+			if (i[0] > 0 && stack[i[0] - 1] == '(')
+				stack[--i[0]] = '\0';
 			else
 				return (-1);
 		}
-		exp++;
 	}
 	if (stack[0])
 		return (0);
