@@ -6,7 +6,7 @@
 /*   By: dthan <dthan@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/22 14:30:35 by dthan             #+#    #+#             */
-/*   Updated: 2021/03/28 02:05:43 by dthan            ###   ########.fr       */
+/*   Updated: 2021/03/28 18:53:04 by dthan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -120,7 +120,7 @@ int			fc_e_op(int ops, char *editor, char *first, char *last)
 	fc_e_copy_lines_into_editor(fd, r_ind);
 	close(fd);
 	fc_e_editing_process(editor);
-	ft_bzero(cmd, 52);
+	ft_bzero(cmd, sizeof(char*) * 52);
 	fc_e_build_cmd(cmd);
 	fc_e_execution_loop(cmd);
 	return (EXIT_SUCCESS);
