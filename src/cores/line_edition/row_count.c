@@ -6,7 +6,7 @@
 /*   By: ihwang <ihwang@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/12 19:43:38 by rklein            #+#    #+#             */
-/*   Updated: 2021/03/27 22:36:47 by rklein           ###   ########.fr       */
+/*   Updated: 2021/03/19 22:38:34 by rklein           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 **Counts the total number of rows of l->line
 */
 
-int		ft_row_count(t_l *l)
+int			ft_row_count(t_l *l)
 {
 	int i;
 	int count;
@@ -43,16 +43,16 @@ int		ft_row_count(t_l *l)
 	return (row);
 }
 
-void	ft_recalc_lc(t_l *l)
+static void	ft_recalc_lc(t_l *l)
 {
 	int row;
 
 	ft_arraydel(l->lc);
-	row = l->rs ? ft_row_count_rs(l) : ft_row_count(l);
+	row = ft_row_count(l);
 	l->lc = malloc(sizeof(char*) * (row + 1));
 }
 
-void	ft_line_count(t_l *l)
+void		ft_line_count(t_l *l)
 {
 	int	count;
 	int	i;

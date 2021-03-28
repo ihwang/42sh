@@ -6,7 +6,7 @@
 /*   By: ihwang <ihwang@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/04/16 21:44:40 by ihwang            #+#    #+#             */
-/*   Updated: 2021/03/27 22:28:50 by rklein           ###   ########.fr       */
+/*   Updated: 2021/03/21 03:48:17 by ihwang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -120,9 +120,6 @@ int		ft_count_rows(t_l *l);
 */
 int		ft_row_count(t_l *l);
 void	ft_line_count(t_l *l);
-int		ft_row_count_rs(t_l *l);
-void	ft_line_count_rs(t_l *l);
-void	ft_recalc_lc(t_l *l);
 
 /*
 ** Cursor and index position
