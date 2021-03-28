@@ -6,7 +6,7 @@
 /*   By: rklein <rklein@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/19 23:01:31 by rklein            #+#    #+#             */
-/*   Updated: 2021/03/27 22:41:30 by rklein           ###   ########.fr       */
+/*   Updated: 2021/03/19 23:24:12 by rklein           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,7 +87,7 @@ static void	ft_window_and_line_size(t_l *l)
 {
 	if (g_shell.signal_indicator == SIGWINCH)
 		handle_sigwinch(l);
-	l->rs ? ft_line_count_rs(l) : ft_line_count(l);
+	ft_line_count(l);
 }
 
 void		ft_read_input(t_get_line_service *self, t_phase *phase, \
