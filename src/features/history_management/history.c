@@ -6,7 +6,7 @@
 /*   By: dthan <dthan@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/04/20 00:22:24 by ihwang            #+#    #+#             */
-/*   Updated: 2021/03/26 23:07:09 by dthan            ###   ########.fr       */
+/*   Updated: 2021/03/26 21:16:55 by dthan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -163,7 +163,6 @@ typedef struct s_read_history_file
 	int		pos;
 	int		cont;
 	int		hst_size;
-	char	quote_type;
 }		t_read_history_file;
 
 void init_read_history_struct(t_read_history_file *self)
@@ -174,7 +173,6 @@ void init_read_history_struct(t_read_history_file *self)
 	self->pos = 0;
 	self->cont = 1;
 	self->hst_size = 0;
-	self->quote_type = '\0';
 }
 
 int is_logical_operators_or_pipe_operator(char *str, int *i)
@@ -202,6 +200,8 @@ int		jump_quote2(char *input, int *i, char quote_type)
 		{
 			if (input[*i] == quote_type && is_real_character(input, *i))
 				break ;
+			else if (input[*i] == 4)
+				return (EXIT_FAILURE);
 			(*i)++;
 		}
 	}
@@ -210,22 +210,7 @@ int		jump_quote2(char *input, int *i, char quote_type)
 	return (EXIT_SUCCESS);
 }
 
-int		jump_quote3(char *input, int *i, char quote_type)
-{
-	while (input[*i])
-	{
-		if (input[*i] == quote_type && is_real_character(input, *i))
-			break ;
-		else if (input[*i] == 4)
-			return (EXIT_FAILURE);
-		(*i)++;
-	}
-	if (input[*i] == '\0')
-		return (2);
-	return (EXIT_SUCCESS);
-}
-
-int read_line_not_inside_quotation(char *buff_read, int *pos, int isContinue, char in_quotation[1])
+int is_continuing_read_line(char *buff_read, int *pos, int isContinue)
 {
 	while (buff_read[(*pos)])
 	{
@@ -235,11 +220,10 @@ int read_line_not_inside_quotation(char *buff_read, int *pos, int isContinue, ch
 			return (isContinue) ? 1 : 0;
 		else if (is_inhibitors(buff_read, *pos, buff_read[*pos]))
 		{
-			in_quotation[0] = buff_read[*pos];
 			if (jump_quote2(buff_read, pos, buff_read[*pos]) == EXIT_FAILURE)
 				return 1;
-			isContinue = 0;
-			in_quotation[0] = '\0';
+			if (isContinue)
+				isContinue = 0;
 		}
 		else if (is_logical_operators_or_pipe_operator(&buff_read[*pos], pos))
 			isContinue = 1;
@@ -248,29 +232,6 @@ int read_line_not_inside_quotation(char *buff_read, int *pos, int isContinue, ch
 		(*pos)++;
 	}
 	return (isContinue);
-}
-
-int is_continuing_read_line(char *buff_read, int *pos, int isContinue, char in_quotation[1])
-{
-	int ret;
-
-	if (in_quotation[0])
-	{
-		ret = jump_quote3(buff_read, pos, in_quotation[0]);
-		if (ret == EXIT_FAILURE)
-		{
-			in_quotation[0] = '\0';
-			return (0);
-		}
-		else if (ret == 2)
-		{
-			return (1);
-		}
-		isContinue = 0;
-		in_quotation[0] = '\0';
-		(*pos)++;
-	}
-	return read_line_not_inside_quotation(buff_read, pos, isContinue, in_quotation);
 }
 
 void add_command_into_history(t_read_history_file *self)
@@ -292,12 +253,12 @@ int read_history_file(int fd)
 	{
 		ft_strcat(instance.buff_read, instance.line_read);
 		ft_strcat(instance.buff_read, "\n");
-		if ((instance.cont = is_continuing_read_line(instance.buff_read, &(instance.pos), instance.cont, &instance.quote_type)) == 0)
+		if ((instance.cont = is_continuing_read_line(instance.buff_read, &(instance.pos), instance.cont)) == 0)
 		{
 			add_command_into_history(&instance);
 			if (instance.buff_write[ft_strlen(instance.buff_write) - 1] == 4)
 			{
-				if ((instance.cont = is_continuing_read_line(instance.buff_read, &(instance.pos), instance.cont, &instance.quote_type)) == 0)
+				if ((instance.cont = is_continuing_read_line(instance.buff_read, &(instance.pos), instance.cont)) == 0)
 					add_command_into_history(&instance);
 				else if (instance.buff_read[instance.pos] != '\0')
 					instance.pos++;
