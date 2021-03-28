@@ -6,20 +6,11 @@
 /*   By: dthan <dthan@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/22 14:30:35 by dthan             #+#    #+#             */
-/*   Updated: 2021/03/27 21:56:59 by dthan            ###   ########.fr       */
+/*   Updated: 2021/03/28 02:05:43 by dthan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "shell.h"
-
-static void	fc_e_build_cmd(char **container)
-{
-	int		fd;
-
-	fd = open(FC_EDITING_FILE, O_RDONLY, 0644);
-	read_commands_from_a_file(fd, container);	
-	close(fd);
-}
 
 static int	fc_e_init_range(int *r_ind, char *first, char *last)
 {
@@ -47,10 +38,7 @@ static void	fc_e_copy_lines_into_editor(int fd, int *r_ind)
 	{
 		while (r_ind[0] < r_ind[1])
 		{
-			if (g_shell.history->hist[r_ind[0] - 1][ft_strlen(g_shell.history->hist[r_ind[0] - 1]) - 1] == 4)
-				write(fd, g_shell.history->hist[r_ind[0] - 1], ft_strlen(g_shell.history->hist[r_ind[0] - 1]) - 1);
-			else
-				ft_dprintf(fd, "%s", g_shell.history->hist[r_ind[0] - 1]);
+			write_history_commands_into_editor(fd, r_ind);
 			r_ind[0]++;
 		}
 	}
@@ -58,14 +46,11 @@ static void	fc_e_copy_lines_into_editor(int fd, int *r_ind)
 	{
 		while (r_ind[0] > r_ind[1])
 		{
-			if (g_shell.history->hist[r_ind[0] - 1][ft_strlen(g_shell.history->hist[r_ind[0] - 1]) - 1] == 4)
-				write(fd, g_shell.history->hist[r_ind[0] - 1], ft_strlen(g_shell.history->hist[r_ind[0] - 1]) - 1);
-			else
-				ft_dprintf(fd, "%s", g_shell.history->hist[r_ind[0] - 1]);
+			write_history_commands_into_editor(fd, r_ind);
 			r_ind[0]--;
 		}
 	}
-	ft_dprintf(fd, "%s", g_shell.history->hist[r_ind[0] - 1]);
+	write_history_commands_into_editor(fd, r_ind);
 }
 
 static void	fc_e_editing_process(char *editor)
@@ -103,7 +88,7 @@ static void	fc_e_editing_process(char *editor)
 **		6. execute and change the command with g_shell.history->tmp
 */
 
-static void		fc_e_execution_loop(char *cmd[])
+static void	fc_e_execution_loop(char *cmd[])
 {
 	int	i;
 
@@ -140,28 +125,3 @@ int			fc_e_op(int ops, char *editor, char *first, char *last)
 	fc_e_execution_loop(cmd);
 	return (EXIT_SUCCESS);
 }
-
-/*int			fc_e_op(int ops, char *editor, char *first, char *last)
-{
-	char	*cmd;
-	int		r_ind[2];
-	int		fd;
-
-	if (fc_check_editor(editor) == EXIT_FAILURE)
-		return (EXIT_FAILURE);
-	if (fc_e_init_range(r_ind, first, last) == EXIT_FAILURE)
-		return (EXIT_FAILURE);
-	if (ops & FC_R_OP)
-		ft_swap_int(&r_ind[0], &r_ind[1]);
-	fd = open(FC_EDITING_FILE, O_CREAT | O_TRUNC | O_WRONLY, 0644);
-	fc_e_copy_lines_into_editor(fd, r_ind);
-	close(fd);
-	fc_e_editing_process(editor);
-	cmd = fc_e_build_cmd();
-	if (g_shell.history->tmp)
-		free(g_shell.history->tmp);
-	g_shell.history->tmp = cmd;
-	ft_printf("%s", cmd);
-	ft_fc_execute(cmd);
-	return (EXIT_SUCCESS);
-}*/

@@ -181,6 +181,7 @@ BUILT_IN_FILE += ft_jobs.c
 BUILT_IN_FILE += ft_fg.c
 BUILT_IN_FILE += ft_fc.c
 BUILT_IN_FILE += ft_fc_utilities/ft_fc_exec_e.c
+BUILT_IN_FILE += ft_fc_utilities/ft_fc_exec_e2.c
 BUILT_IN_FILE += ft_fc_utilities/ft_fc_exec_s.c
 BUILT_IN_FILE += ft_fc_utilities/ft_fc_execute.c
 BUILT_IN_FILE += ft_fc_utilities/ft_fc_utilities.c

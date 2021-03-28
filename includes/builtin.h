@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtin.h                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ihwang <ihwang@student.hive.fi>            +#+  +:+       +#+        */
+/*   By: dthan <dthan@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/05 03:23:45 by dthan             #+#    #+#             */
-/*   Updated: 2021/03/21 03:40:16 by ihwang           ###   ########.fr       */
+/*   Updated: 2021/03/28 02:03:02 by dthan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,10 +101,12 @@ int				fc_error_option_requires_an_argument(void);
 int				fc_range(char *str);
 int				fc_s_op(char *replace, char *first);
 int				fc_e_op(int ops, char *editor, char *first, char *last);
+void			fc_e_build_cmd(char **container);
 int				fc_list(int ops, char *first, char *last);
 void			ft_fc_execute(char *cmd);
 int				fc_check_editor(char *editor);
 char			*fc_return_cmd(char *str);
+void			write_history_commands_into_editor(int fd, int *r_ind);
 
 /*
 ** End of Fc built-in

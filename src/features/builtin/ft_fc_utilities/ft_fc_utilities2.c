@@ -6,7 +6,7 @@
 /*   By: dthan <dthan@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/13 22:27:09 by dthan             #+#    #+#             */
-/*   Updated: 2021/03/13 22:51:23 by dthan            ###   ########.fr       */
+/*   Updated: 2021/03/28 02:05:14 by dthan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,4 +53,19 @@ char		*fc_return_cmd(char *str)
 	if (pos == 0)
 		return (NULL);
 	return (ft_strdup(g_shell.history->hist[pos - 1]));
+}
+
+void		write_history_commands_into_editor(int fd, int *r_ind)
+{
+	if (g_shell.history->hist[r_ind[0] - 1]
+		[ft_strlen(g_shell.history->hist[r_ind[0] - 1]) - 1] == 4)
+	{
+		write(fd,
+			g_shell.history->hist[r_ind[0] - 1],
+			ft_strlen(g_shell.history->hist[r_ind[0] - 1]) - 1);
+	}
+	else
+	{
+		ft_dprintf(fd, "%s", g_shell.history->hist[r_ind[0] - 1]);
+	}
 }

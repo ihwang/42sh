@@ -6,7 +6,7 @@
 /*   By: dthan <dthan@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/26 23:37:02 by dthan             #+#    #+#             */
-/*   Updated: 2021/03/28 01:16:27 by dthan            ###   ########.fr       */
+/*   Updated: 2021/03/28 01:38:56 by dthan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -173,7 +173,8 @@ int			read_commands_from_a_file(int fd, char **container)
 	}
 	if (ft_strlen(instance.buff_read) > 0)
 	{
-		ft_strcat(instance.buff_read, EOF_VALUE);
+		if (container[0] != NULL && !ft_strequ(instance.buff_read, "\n"))
+			ft_strcat(instance.buff_read, EOF_VALUE);
 		add_command_into_container(&instance, container);
 	}
 	(instance.line_read) ? free(instance.line_read) : 0;
