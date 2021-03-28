@@ -6,7 +6,7 @@
 /*   By: dthan <dthan@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/27 11:55:59 by dthan             #+#    #+#             */
-/*   Updated: 2021/02/28 13:09:12 by dthan            ###   ########.fr       */
+/*   Updated: 2021/03/28 21:08:35 by dthan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,4 +52,34 @@ void	assign_word(char parameter[256], char word[256])
 		update_intern_var(intern_var);
 	else
 		add_intern_var(intern_var);
+}
+
+int		is_replacement_has_quotation(char replacement[256])
+{
+	int i;
+
+	i = -1;
+	while (replacement[++i])
+		if (replacement[i] == '"' || replacement[i] == '\\')
+			return (1);
+	return (0);
+}
+
+void	add_back_slash_in_front(char replacement[256])
+{
+	int		i;
+	char	temp[256];
+
+	i = -1;
+	while (replacement[++i])
+	{
+		if (replacement[i] == '"' || replacement[i] == '\\')
+		{
+			ft_strcpy(temp, &replacement[i]);
+			replacement[i] = '\\';
+			replacement[i + 1] = '\0';
+			ft_strcat(replacement, temp);
+			i++;
+		}
+	}
 }

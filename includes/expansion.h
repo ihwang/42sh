@@ -6,7 +6,7 @@
 /*   By: dthan <dthan@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/17 13:07:00 by dthan             #+#    #+#             */
-/*   Updated: 2021/03/14 02:53:55 by dthan            ###   ########.fr       */
+/*   Updated: 2021/03/28 21:08:09 by dthan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,6 +57,8 @@ void					substitute_word(
 void					assign_word(
 	char parameter[256], char word[256]);
 int						parameter_expansion_for_word(char word[256]);
+int						is_replacement_has_quotation(char replacement[256]);
+void					add_back_slash_in_front(char replacement[256]);
 
 /*
 ** parameter expansion complex

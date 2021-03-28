@@ -6,7 +6,7 @@
 /*   By: dthan <dthan@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/26 07:00:23 by dthan             #+#    #+#             */
-/*   Updated: 2021/03/28 13:00:18 by dthan            ###   ########.fr       */
+/*   Updated: 2021/03/28 21:09:09 by dthan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,7 +79,8 @@ int		is_parameter_expansion(char *str)
 		if (str[i] == '$' && is_real_character(str, i) &&
 			str[i + 1] && str[i + 1] == '{')
 			return (1);
-		else if ((str[i] == '\'' || str[i] == '\\') && is_real_character(str, i))
+		else if ((str[i] == '\'' || str[i] == '\\') &&
+				is_real_character(str, i))
 			jump_quote(str, &i, str[i]);
 	}
 	return (0);
