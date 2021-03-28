@@ -6,147 +6,11 @@
 /*   By: dthan <dthan@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/04/20 00:22:24 by ihwang            #+#    #+#             */
-/*   Updated: 2021/03/26 01:11:25 by dthan            ###   ########.fr       */
+/*   Updated: 2021/03/20 18:29:16 by dthan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "shell.h"
-
-/*
-
-typedef s_read_history_file
-{
-	char *line_read;
-	char buff_read[4096];
-	char buff_write[4096];
-	int  pos;
-	int  cont;
-}		t_read_history_file;
-
-void init_read_history_struct(t_read_history_file *self)
-{
-	self->line_read = null;
-	ft_bzero(self->buff_read, 4096);
-	ft_bzero(self->buff_write, 4096);
-	self->pos = 0;
-	self->cont = 0;
-}
-
-Algorithm for reading history file:
-	1. getting everyline from the history file, which is without '\n'
-	2. copy the line into the buff_read and copy a line break there too, so we dont have to make condition checking
-	   to add line break since, at the end of every line is a line break
-	3. check if return value of function check_continue_read_line
-		if instance.cont == 1 --> continue read and add into the buff_read
-		else instance.cont == 0 --> add into the history container
-				To add into the history container:
-				a, reset buff_write
-				b, using strncpy to copy the buff_read to buff_write with n = instance.pos + 1
-				c, add into the history container
-				d, cut the rest of the buff_read, start with instance.pos + 1
-				e, now we start copy into buff_read again and now instance.pos reset to 0
-
-	4. free the instance.line to keep reading new line
-
-read_history_file()
-{
-	t_read_history_file instance;
-
-	init_read_history_struct(&instance);
-	while (get_next_line(fd, &(instance->line)) && ...)
-	{
-		ft_strcat(buff_read, line);
-		ft_strcat(buff_read, "\n");
-		if ((instance.cont = is_continuing_read_line(instance.buff_read, &(instance.pos), instance.cont)) == 0)
-		{
-			ft_bzero(instance->buff_write, 4096);
-			ft_strncpy(instance.buff_read, instance.buff_write, instance.pos + 1);
-			g_shell.history->hist[i++] = ft_strdup(instance.buff_write);
-			g_shell.history->curr = i;
-			ft_strcpy(instance.buff_read, &buff_read[instance.pos + 1]);
-			instance.pos = 0;
-		}
-		else
-		{
-			if (instance.buf_read[instance.pos] != '\0')   ---> for checking error
-			{
-				instance.pos++;
-			}
-		}
-		(instance.line) ? free(instance.line) : 0;
-	}
-}
-
-----------------------------------------------------------------
-Algorithm for is_continuing_read_line function:
-we keep reading the buff_read from the pos since we cant keep reading from 0, it has to be
-where we left off, since at every loop of get_next_line we already add a line_break
-	if (buff_read[*pos] == 4)
-		check_continue_read_line return 1
-	if (buff_read[pos] == '\n')
-		if isContinue == 1
-			check_continue_read_line return 1
-		else
-			check_continue_read_line return 0
-	if jump_quote == EXIT_FAILURE
-		check_continue_read_line return 1
-
-
-
-int is_logical_operators_or_pipe_operator(char *str, int *i)
-{
-	if (ft_strnequ(str, "&&", 2) || ft_strnequ(str, "||", 2))
-	{
-		(*i)++;
-		return 1;
-	}
-	else if (ft_strnequ(str, "|", 1))
-	{
-		return 1;
-	}
-	return 0;
-}
-
-int is_continuing_read_line(char *buff_read, int *pos, int isContinue)
-{
-	while (str[(*pos)])
-	{
-		if (buff_read[*pos] == 4)
-		{
-			return 0;
-		}
-		else if (buff_read[*pos] == '\n')
-		{
-			return (isContinue) ? 1 : 0;
-		}
-		else if (is_inhibitor(buff_read, *pos, buff_read[*pos]))
-		{
-			if (jump_quote(buff_read, pos, buff_read[*pos]) == EXIT_FAILURE)
-			{
-				return 0;
-			}
-			if (isContinue)
-			{
-				isContinue = 0;
-			}
-		}
-		else if (is_logical_operators_or_pipe_operator(&buf_read[*pos], pos))
-		{
-			isContinue = 1;
-		}
-		else if (!ft_isspace(buff_read[*pos]))
-		{
-			if (isContinue)
-			{
-				isContinue = 0;
-			}
-		}
-		(*pos)++;
-	}
-	return (isContinue);
-}
-
-*/
 
 static int	read_history_file(int fd)
 {
@@ -164,13 +28,13 @@ static int	read_history_file(int fd)
 		{
 			ft_bzero(buffer[1], 4096);
 			ft_strncpy(buffer[1], buffer[0], end_pos + 1);
-			if (buffer[0][end_pos] != 4 && buffer[0][end_pos] != '\n')
-				ft_strcat(buffer[1], "\n");
+			ft_strcat(buffer[1], "\n");
 			g_shell.history->hist[i++] = ft_strdup(buffer[1]);
 			g_shell.history->curr = i;
-			ft_strcpy(buffer[0], &buffer[0][end_pos + 1]);
+			ft_strcpy(buffer[0], &buffer[0][end_pos]);
 		}
-		ft_strcat(buffer[0], "\n");
+		else
+			ft_strcat(buffer[0], "\n");
 		free(line);
 	}
 	return (i);
