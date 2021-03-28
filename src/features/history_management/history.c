@@ -6,7 +6,7 @@
 /*   By: dthan <dthan@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/04/20 00:22:24 by ihwang            #+#    #+#             */
-/*   Updated: 2021/03/27 21:02:05 by rklein           ###   ########.fr       */
+/*   Updated: 2021/03/28 09:41:21 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ int			get_history(int fd)
 	fd = open(g_shell.history->savedfile, O_RDWR | O_CREAT, 0644);
 	if (fd == -1)
 	{
-		ft_printf("42sh: Fatal error: .history: Permission denied\n");
+		ft_dprintf(0, "42sh: Fatal error: .history: Permission denied\n");
 		return (EXIT_FAILURE);
 	}
 	i = read_history_file(fd);

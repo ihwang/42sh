@@ -6,7 +6,7 @@
 /*   By: dthan <dthan@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/26 20:14:36 by ihwang            #+#    #+#             */
-/*   Updated: 2021/03/27 21:43:38 by rklein           ###   ########.fr       */
+/*   Updated: 2021/03/28 09:32:33 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,7 @@ static int	init_shell(char **envp)
 	if (init_job_control_stuff() == EXIT_FAILURE)
 		return (EXIT_FAILURE);
 	if (init_history_stuff() == EXIT_FAILURE)
-		exit(0);
+		exit(1);
 	init_signal_and_other_stuff();
 	return (EXIT_SUCCESS);
 }
