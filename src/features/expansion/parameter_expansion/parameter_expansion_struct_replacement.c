@@ -6,11 +6,41 @@
 /*   By: dthan <dthan@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/27 11:34:44 by dthan             #+#    #+#             */
-/*   Updated: 2021/02/28 14:02:08 by dthan            ###   ########.fr       */
+/*   Updated: 2021/03/28 13:47:12 by dthan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "shell.h"
+
+int		is_replacement_has_quotation(char replacement[256])
+{
+	int i;
+
+	i = -1;
+	while (replacement[++i])
+		if (replacement[i] == '"' || replacement[i] == '\\')
+			return (1);
+	return (0);
+}
+
+void	add_back_slash_in_front(char replacement[256])
+{
+	int i;
+	char temp[256];
+
+	i = -1;
+	while (replacement[++i])
+	{
+		if (replacement[i] == '"' || replacement[i] == '\\')
+		{
+			ft_strcpy(temp, &replacement[i]);
+			replacement[i] = '\\';
+			replacement[i + 1] = '\0';
+			ft_strcat(replacement, temp);
+			i++;
+		}
+	}
+}
 
 int							simple_parameter_expansion(
 	char replacement[256], char parameter[256])
@@ -35,7 +65,11 @@ int							simple_parameter_expansion(
 	{
 		var = ft_getvar(parameter);
 		if (var->value)
+		{
 			ft_strcpy(replacement, var->value);
+			if (is_replacement_has_quotation(replacement))
+				add_back_slash_in_front(replacement);
+		}
 	}
 	return (EXIT_SUCCESS);
 }

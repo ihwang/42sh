@@ -6,7 +6,7 @@
 /*   By: dthan <dthan@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/17 13:52:13 by dthan             #+#    #+#             */
-/*   Updated: 2021/03/12 22:40:58 by dthan            ###   ########.fr       */
+/*   Updated: 2021/03/28 12:25:16 by dthan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,9 +37,23 @@ static void	quote_removal_in_redi(t_process *p)
 	}
 }
 
+static void	quote_removal_in_assignment_word(t_process *p)
+{
+	t_assignment *ptr;
+
+	ptr = p->first_assignment;
+	while (ptr)
+	{
+		if (is_quoted(ptr->data))
+			ptr->data = remove_quote(ptr->data);
+		ptr = ptr->next;
+	}
+}
+
 int			quote_removal(t_process *p)
 {
 	quote_removal_in_av(p);
 	quote_removal_in_redi(p);
+	quote_removal_in_assignment_word(p);
 	return (EXIT_SUCCESS);
 }

@@ -6,7 +6,7 @@
 /*   By: dthan <dthan@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/12 22:37:30 by dthan             #+#    #+#             */
-/*   Updated: 2021/03/14 16:33:09 by dthan            ###   ########.fr       */
+/*   Updated: 2021/03/28 14:13:33 by dthan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,8 +34,13 @@ char	*remove_quoting(char *str, int *i)
 	j = 0;
 	while (str[++*i])
 	{
-		if (str[*i] == quote && is_real_character(str, *i))
-			break ;
+		if (str[*i] == quote)
+		{
+			if (quote == '"' && is_real_character(str, *i))
+				break ;
+			else if (quote == '\'')
+				break ;
+		} 
 		if (str[*i] == '\\' && quote == '"')
 			(*i)++;
 		if (str[*i])
