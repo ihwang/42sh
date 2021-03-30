@@ -79,6 +79,7 @@ int		is_parameter_expansion_in_dquote(char *str, int *i)
 			return (1);
 		else if (str[*i] == '"')
 			break ;
+		(*i)++;
 	}
 	return (0);
 }
