@@ -69,6 +69,20 @@ int		jump_expansion(char *str, int *i, char expansion_type, char temp[2])
 	return ((str[*i] == '\0') ? EXIT_FAILURE : EXIT_SUCCESS);
 }
 
+int		is_parameter_expansion_in_dquote(char *str, int *i)
+{
+	(*i)++;
+	while (str[*i])
+	{
+		if (str[*i] == '$' && is_real_character(str, *i) &&
+			str[*i + 1] && str[*i + 1] == '{')
+			return (1);
+		else if (str[*i] == '"')
+			break ;
+	}
+	return (0);
+}
+
 int		is_parameter_expansion(char *str)
 {
 	int	i;
@@ -79,6 +93,11 @@ int		is_parameter_expansion(char *str)
 		if (str[i] == '$' && is_real_character(str, i) &&
 			str[i + 1] && str[i + 1] == '{')
 			return (1);
+		else if (str[i] == '\"' && is_real_character(str, i))
+		{
+			if (is_parameter_expansion_in_dquote(str, &i))
+				return (1);
+		}
 		else if ((str[i] == '\'' || str[i] == '\\') &&
 				is_real_character(str, i))
 			jump_quote(str, &i, str[i]);
