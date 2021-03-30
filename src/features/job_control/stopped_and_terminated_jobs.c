@@ -6,7 +6,7 @@
 /*   By: dthan <dthan@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/02 02:37:24 by dthan             #+#    #+#             */
-/*   Updated: 2021/03/30 19:45:15 by dthan            ###   ########.fr       */
+/*   Updated: 2021/03/30 19:51:21 by dthan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ void	mark_process_status_signal(t_process *p, int status, t_job *j)
 		{
 			if (is_signal_should_print(WTERMSIG(status)))
 			{
-				if (j->foreground)
+				if (j->foreground && !job_is_stopped(j))
 					ft_printf("%s: %d\n", sig_msgs[WTERMSIG(status) - 1],
 						WTERMSIG(status));
 				else
