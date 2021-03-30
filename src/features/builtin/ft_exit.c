@@ -6,7 +6,7 @@
 /*   By: dthan <dthan@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/06 15:27:24 by ihwang            #+#    #+#             */
-/*   Updated: 2021/03/30 18:35:20 by dthan            ###   ########.fr       */
+/*   Updated: 2021/03/30 18:42:23 by dthan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,37 +27,24 @@ static void	delete_enviroment(char **env)
 	free(env);
 }
 
-static void	delete_all_jobs_before_exit(t_job *first_job)
+static void	delete_save_history_and_free_container(void)
 {
-	t_job *ptr;
-	t_job *temp;
-
-	update_status();
-	if (first_job == NULL)
-		return ;
-	ptr = first_job;
-	while (ptr)
-	{
-		temp = ptr;
-		ptr = ptr->next;
-		delete_job(temp, 1);
-		temp = NULL;
-	}
+	delete_save_history();
+	ft_arraydel(g_shell.history->hist);
+	free(g_shell.history->tmp);
+	free(g_shell.history);
 }
 
 int			ft_exit_internal(int ret_value)
 {
 	(g_shell.history->tmp != NULL) ? append_history() : 0;
-	delete_save_history();
-	ft_arraydel(g_shell.history->hist);
-	free(g_shell.history->tmp);
-	free(g_shell.history);
-	delete_enviroment(g_shell.env);
 	clean_table_intern_var(g_shell.intern_var);
-	delete_all_jobs_before_exit(g_shell.first_job);
 	remove_all(&g_shell.alias);
 	remove_hashentries();
 	delete_builtin_commands();
+	delete_save_history_and_free_container();
+	delete_all_jobs_before_exit(g_shell.first_job);
+	delete_enviroment(g_shell.env);
 	if (g_shell.pipe_indicator == 0)
 		ft_dprintf(STDERR_FILENO, "exit\n");
 	exit(ret_value);

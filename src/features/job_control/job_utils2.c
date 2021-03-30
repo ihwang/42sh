@@ -6,7 +6,7 @@
 /*   By: dthan <dthan@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/15 18:01:10 by dthan             #+#    #+#             */
-/*   Updated: 2021/03/12 22:54:16 by dthan            ###   ########.fr       */
+/*   Updated: 2021/03/30 18:40:55 by dthan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,4 +60,22 @@ void	wait_for_job(t_job *j, int opt)
 		!job_is_stopped(j) &&
 		!job_is_completed(j))
 		pid = waitpid(-j->pgid, &status, opt);
+}
+
+void	delete_all_jobs_before_exit(t_job *first_job)
+{
+	t_job *ptr;
+	t_job *temp;
+
+	update_status();
+	if (first_job == NULL)
+		return ;
+	ptr = first_job;
+	while (ptr)
+	{
+		temp = ptr;
+		ptr = ptr->next;
+		delete_job(temp, 1);
+		temp = NULL;
+	}
 }
