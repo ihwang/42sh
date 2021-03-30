@@ -6,7 +6,7 @@
 /*   By: dthan <dthan@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/02 02:37:24 by dthan             #+#    #+#             */
-/*   Updated: 2021/03/30 19:51:21 by dthan            ###   ########.fr       */
+/*   Updated: 2021/03/30 20:01:00 by dthan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,22 @@ void	mark_process_status_exit(t_process *p, int status)
 	ft_putchar('\n');
 	p->stopped = 1;
 	g_shell.exit_status = 128 + WSTOPSIG(status);
+}
+
+void	print_signal(char *sig_message, int sig_number, t_job *j)
+{
+	char msgs[256];
+	char *numb;
+
+	numb = ft_itoa(sig_number);
+	ft_strcpy(msgs, sig_message);
+	ft_strcat(msgs, ": ");
+	ft_strcat(msgs, numb);
+	(numb) ? free(numb) : 0;
+	if (j->foreground && !job_is_stopped(j))
+		ft_printf("%s\n", msgs);
+	else
+		format_job_info(j, msgs, 0);
 }
 
 void	mark_process_status_signal(t_process *p, int status, t_job *j)
@@ -35,13 +51,7 @@ void	mark_process_status_signal(t_process *p, int status, t_job *j)
 			WTERMSIG(status) > 0)
 		{
 			if (is_signal_should_print(WTERMSIG(status)))
-			{
-				if (j->foreground && !job_is_stopped(j))
-					ft_printf("%s: %d\n", sig_msgs[WTERMSIG(status) - 1],
-						WTERMSIG(status));
-				else
-					format_job_info(j, sig_msgs[WTERMSIG(status) - 1], 0);
-			}
+				print_signal(sig_msgs[WTERMSIG(status) - 1], WTERMSIG(status), j);
 		}
 		else
 			ft_printf("%s: Unknown signal%d\n", SHELL_NAME, WTERMSIG(status));
