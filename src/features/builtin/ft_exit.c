@@ -6,7 +6,7 @@
 /*   By: dthan <dthan@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/06 15:27:24 by ihwang            #+#    #+#             */
-/*   Updated: 2021/03/28 19:06:08 by dthan            ###   ########.fr       */
+/*   Updated: 2021/03/30 18:35:20 by dthan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,24 @@ static void	delete_enviroment(char **env)
 	free(env);
 }
 
+static void	delete_all_jobs_before_exit(t_job *first_job)
+{
+	t_job *ptr;
+	t_job *temp;
+
+	update_status();
+	if (first_job == NULL)
+		return ;
+	ptr = first_job;
+	while (ptr)
+	{
+		temp = ptr;
+		ptr = ptr->next;
+		delete_job(temp, 1);
+		temp = NULL;
+	}
+}
+
 int			ft_exit_internal(int ret_value)
 {
 	(g_shell.history->tmp != NULL) ? append_history() : 0;
@@ -36,11 +54,7 @@ int			ft_exit_internal(int ret_value)
 	free(g_shell.history);
 	delete_enviroment(g_shell.env);
 	clean_table_intern_var(g_shell.intern_var);
-	if (g_shell.first_job)
-	{
-		update_status();
-		delete_job(g_shell.first_job, 1);
-	}
+	delete_all_jobs_before_exit(g_shell.first_job);
 	remove_all(&g_shell.alias);
 	remove_hashentries();
 	delete_builtin_commands();
