@@ -6,7 +6,7 @@
 /*   By: dthan <dthan@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/02 02:37:24 by dthan             #+#    #+#             */
-/*   Updated: 2021/03/20 16:36:08 by dthan            ###   ########.fr       */
+/*   Updated: 2021/03/30 19:45:15 by dthan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ void	mark_process_status_exit(t_process *p, int status)
 	g_shell.exit_status = 128 + WSTOPSIG(status);
 }
 
-void	mark_process_status_signal(t_process *p, int status)
+void	mark_process_status_signal(t_process *p, int status, t_job *j)
 {
 	static char *sig_msgs[SIGNAL_NUMBER_OSX];
 
@@ -35,8 +35,13 @@ void	mark_process_status_signal(t_process *p, int status)
 			WTERMSIG(status) > 0)
 		{
 			if (is_signal_should_print(WTERMSIG(status)))
-				ft_printf("%s: %d\n", sig_msgs[WTERMSIG(status) - 1],
-					WTERMSIG(status));
+			{
+				if (j->foreground)
+					ft_printf("%s: %d\n", sig_msgs[WTERMSIG(status) - 1],
+						WTERMSIG(status));
+				else
+					format_job_info(j, sig_msgs[WTERMSIG(status) - 1], 0);
+			}
 		}
 		else
 			ft_printf("%s: Unknown signal%d\n", SHELL_NAME, WTERMSIG(status));
@@ -44,7 +49,7 @@ void	mark_process_status_signal(t_process *p, int status)
 }
 
 int		mark_process_status_helper(
-	t_process *first_process, pid_t pid, int status)
+	t_process *first_process, pid_t pid, int status, t_job *j)
 {
 	t_process *p_ptr;
 
@@ -57,7 +62,7 @@ int		mark_process_status_helper(
 			if (WIFSTOPPED(status))
 				mark_process_status_exit(p_ptr, status);
 			else
-				mark_process_status_signal(p_ptr, status);
+				mark_process_status_signal(p_ptr, status, j);
 			return (0);
 		}
 		p_ptr = p_ptr->next;
@@ -75,7 +80,7 @@ int		mark_process_status(t_job *j, pid_t pid, int status)
 		j_ptr = j;
 		while (j_ptr)
 		{
-			ret = mark_process_status_helper(j_ptr->first_process, pid, status);
+			ret = mark_process_status_helper(j_ptr->first_process, pid, status, j);
 			if (ret == 0)
 				return (0);
 			j_ptr = j_ptr->next;
