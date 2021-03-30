@@ -6,7 +6,7 @@
 /*   By: dthan <dthan@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/02 02:37:24 by dthan             #+#    #+#             */
-/*   Updated: 2021/03/30 20:01:00 by dthan            ###   ########.fr       */
+/*   Updated: 2021/03/30 20:17:31 by dthan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,22 @@ void	mark_process_status_exit(t_process *p, int status)
 	ft_putchar('\n');
 	p->stopped = 1;
 	g_shell.exit_status = 128 + WSTOPSIG(status);
+}
+
+void	set_job_complete_because_of_signal(t_job *j)
+{
+	t_process *p_ptr;
+
+	p_ptr = j->first_process;
+	while (p_ptr)
+	{
+		if (!p_ptr->completed)
+		{
+			kill(p_ptr->pid, SIGTERM);
+			p_ptr->completed = 1;
+		}
+		p_ptr = p_ptr->next;
+	}
 }
 
 void	print_signal(char *sig_message, int sig_number, t_job *j)
@@ -32,7 +48,10 @@ void	print_signal(char *sig_message, int sig_number, t_job *j)
 	if (j->foreground && !job_is_stopped(j))
 		ft_printf("%s\n", msgs);
 	else
+	{
 		format_job_info(j, msgs, 0);
+		set_job_complete_because_of_signal(j);
+	}
 }
 
 void	mark_process_status_signal(t_process *p, int status, t_job *j)
