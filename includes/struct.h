@@ -6,7 +6,7 @@
 /*   By: dthan <dthan@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/26 11:18:23 by dthan             #+#    #+#             */
-/*   Updated: 2021/03/26 23:50:17 by dthan            ###   ########.fr       */
+/*   Updated: 2021/04/06 20:03:08 by dthan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -501,12 +501,12 @@ typedef struct			s_alias
 typedef struct			s_parameter_expansion
 {
 	char				**valid_delimeter;
-	char				replacement[256];
-	char				expression[256];
-	char				parameter[256];
+	char				replacement[1028];
+	char				expression[1028];
+	char				parameter[1028];
 	char				delimeter[3];
-	char				word[256];
-	char				needle[256];
+	char				word[1028];
+	char				needle[1028];
 }						t_parameter_expansion;
 
 typedef enum
