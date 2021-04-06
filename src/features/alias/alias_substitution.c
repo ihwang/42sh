@@ -6,7 +6,7 @@
 /*   By: dthan <dthan@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/04/15 23:35:55 by vgrankul          #+#    #+#             */
-/*   Updated: 2021/03/16 22:39:47 by dthan            ###   ########.fr       */
+/*   Updated: 2021/04/06 20:57:48 by dthan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ int		is_alias(char *str, t_token *prev_token)
 	int i;
 
 	i = 0;
-	if (prev_token && !is_control_op_not_newline(prev_token->type))
+	if (prev_token && (!is_control_op_not_newline(prev_token->type)) && prev_token->type != TOKEN_ASSIGNMENT_WORD)
 		return (0);
 	if (g_shell.alias != NULL)
 	{
@@ -59,6 +59,15 @@ t_alias	*find_alias2(char *str)
 	return (NULL);
 }
 
+int		determine_sub_value(char *data, char *alias_value)
+{
+	if (!ft_strnequ(data, alias_value, ft_strlen(data)))
+		return (0);
+	if (!ft_isspace(alias_value[ft_strlen(data)]))
+		return (0);
+	return (1);
+}
+
 t_token	*alias_substitution(t_lexical_service *lex, char *fix_alias_name)
 {
 	t_token *new_stream;
@@ -66,9 +75,7 @@ t_token	*alias_substitution(t_lexical_service *lex, char *fix_alias_name)
 
 	new_stream = NULL;
 	alias = find_alias2(lex->tk->data);
-	new_stream = lexical_analysis_service(alias->value, fix_alias_name,
-		(ft_strnequ(lex->tk->data, alias->value,
-		ft_strlen(lex->tk->data))) ? 1 : 0);
+	new_stream = lexical_analysis_service(alias->value, fix_alias_name, determine_sub_value(lex->tk->data, alias->value), lex->prev_tk);
 	clear_token(lex->tk);
 	if (new_stream == NULL)
 		return (NULL);

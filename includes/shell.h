@@ -6,7 +6,7 @@
 /*   By: dthan <dthan@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/05 05:54:54 by tango             #+#    #+#             */
-/*   Updated: 2021/04/06 23:33:01 by dthan            ###   ########.fr       */
+/*   Updated: 2021/04/07 18:32:09 by dthan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -126,7 +126,7 @@ t_prompt			choose_prompt_type(t_lex_value lex, t_phase phase);
 */
 
 t_token				*lexical_analysis_service(
-	char *input, char *fix_alias_name, int sub);
+	char *input, char *fix_alias_name, int sub, t_token *prev_tk);
 
 /*
 **	Parser

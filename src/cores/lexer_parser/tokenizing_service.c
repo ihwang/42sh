@@ -6,7 +6,7 @@
 /*   By: dthan <dthan@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/06 13:47:57 by dthan             #+#    #+#             */
-/*   Updated: 2021/03/20 16:12:11 by dthan            ###   ########.fr       */
+/*   Updated: 2021/04/06 20:18:25 by dthan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ static t_lex_value	lexical_and_syntax_analysis(
 {
 	t_token *token_stream;
 
-	token_stream = lexical_analysis_service(input, NULL, 0);
+	token_stream = lexical_analysis_service(input, NULL, 0, NULL);
 	if (syntax_analysis_service(token_stream) == EXIT_FAILURE)
 	{
 		clear_token(token_stream);

@@ -6,18 +6,18 @@
 /*   By: dthan <dthan@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/04/09 08:37:27 by dthan             #+#    #+#             */
-/*   Updated: 2021/03/12 22:21:51 by dthan            ###   ########.fr       */
+/*   Updated: 2021/04/06 20:49:44 by dthan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "shell.h"
 
-void	init_lexical_service_struct(t_lexical_service *self)
+void	init_lexical_service_struct(t_lexical_service *self, t_token *prev_token)
 {
 	self->i = 0;
 	self->stream = NULL;
 	self->tk = NULL;
-	self->prev_tk = NULL;
+	self->prev_tk = (prev_token) ? prev_token : NULL;
 	self->keep_alias_substitution = 0;
 }
 
@@ -43,11 +43,11 @@ t_token	*alias_infinite_loop(t_lexical_service *self, char *fix_alias_name)
 	return (self->tk);
 }
 
-t_token	*lexical_analysis_service(char *input, char *fix_alias_name, int sub)
+t_token	*lexical_analysis_service(char *input, char *fix_alias_name, int sub, t_token *prev_token)
 {
 	t_lexical_service self;
 
-	init_lexical_service_struct(&self);
+	init_lexical_service_struct(&self, prev_token);
 	while (input[self.i])
 	{
 		if ((self.tk = token_creator_service(
