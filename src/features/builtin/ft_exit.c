@@ -6,7 +6,7 @@
 /*   By: dthan <dthan@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/06 15:27:24 by ihwang            #+#    #+#             */
-/*   Updated: 2021/03/30 18:45:18 by dthan            ###   ########.fr       */
+/*   Updated: 2021/04/07 01:11:46 by dthan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,8 +36,20 @@ static void	append_and_delete_save_history(void)
 	free(g_shell.history);
 }
 
+static void	delete_signal_messages(char **msgs)
+{
+	int i;
+
+	if (msgs == NULL)
+		return ;
+	i = -1;
+	while (++i < SIGNAL_NUMBER_OSX)
+		free(msgs[i]);
+}
+
 int			ft_exit_internal(int ret_value)
 {
+	delete_signal_messages(g_shell.signal_msgs);
 	remove_all(&g_shell.alias);
 	remove_hashentries();
 	delete_builtin_commands();
