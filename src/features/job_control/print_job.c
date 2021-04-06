@@ -6,7 +6,7 @@
 /*   By: dthan <dthan@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/15 16:53:57 by dthan             #+#    #+#             */
-/*   Updated: 2021/04/07 01:01:19 by dthan            ###   ########.fr       */
+/*   Updated: 2021/04/07 01:02:17 by dthan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,8 +45,6 @@ int		need_to_do_notification_completed_job(t_job *j)
 
 void	do_job_notification_completed_job(t_job *j, t_job *jlast, t_job *jnext)
 {
-	char message[256];
-
 	if (need_to_do_notification_completed_job(j))
 		format_job_info(j, "Done", 0);
 	if (jlast)
