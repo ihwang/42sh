@@ -6,7 +6,7 @@
 /*   By: dthan <dthan@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/26 11:18:23 by dthan             #+#    #+#             */
-/*   Updated: 2021/04/06 20:03:08 by dthan            ###   ########.fr       */
+/*   Updated: 2021/04/07 18:29:37 by dthan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -284,6 +284,7 @@ typedef struct			s_process
 	char				completed;
 	char				stopped;
 	int					status;
+	int					notified;
 	struct s_process	*next;
 }						t_process;
 

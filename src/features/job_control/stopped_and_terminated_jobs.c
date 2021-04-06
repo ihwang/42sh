@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   stopped_and_terminated_jobs.c                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ihwang <ihwang@student.hive.fi>            +#+  +:+       +#+        */
+/*   By: dthan <dthan@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/02 02:37:24 by dthan             #+#    #+#             */
-/*   Updated: 2021/03/30 20:57:05 by ihwang           ###   ########.fr       */
+/*   Updated: 2021/04/07 00:38:29 by dthan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,32 +19,36 @@ void	mark_process_status_exit(t_process *p, int status)
 	g_shell.exit_status = 128 + WSTOPSIG(status);
 }
 
-void	print_signal(char *sig_message, int sig_number, t_job *j)
+void	print_signal(int sig_number, t_job *j)
 {
 	char msgs[256];
 	char *numb;
 
-	numb = ft_itoa(sig_number);
-	ft_strcpy(msgs, sig_message);
-	ft_strcat(msgs, ": ");
-	ft_strcat(msgs, numb);
-	(numb) ? free(numb) : 0;
-	if (j->foreground && !job_is_stopped(j))
-		ft_printf("%s\n", msgs);
+	if (j->foreground)
+	{
+		if (is_signal_should_print(sig_number))
+		{
+			numb = ft_itoa(sig_number);
+			ft_strcpy(msgs, g_shell.signal_msgs[sig_number - 1]);
+			ft_strcat(msgs, ": ");
+			ft_strcat(msgs, numb);
+			(numb) ? free(numb) : 0;
+			ft_printf("%s\n", msgs);
+		}
+	}
 	else
 	{
+		numb = ft_itoa(sig_number);
+		ft_strcpy(msgs, g_shell.signal_msgs[sig_number - 1]);
+		ft_strcat(msgs, ": ");
+		ft_strcat(msgs, numb);
+		(numb) ? free(numb) : 0;
 		format_job_info(j, msgs, 0);
-		set_job_complete_because_of_signal(j);
 	}
 }
 
 void	mark_process_status_signal(t_process *p, int status, t_job *j)
 {
-	static char *sig_msgs[SIGNAL_NUMBER_OSX];
-
-	p->completed = 1;
-	if (!ft_strequ(sig_msgs[0], SIGHUP_MSG))
-		init_signal_messages(sig_msgs);
 	if (WIFEXITED(status))
 		g_shell.exit_status = WEXITSTATUS(status);
 	else if (WIFSIGNALED(status))
@@ -52,14 +56,12 @@ void	mark_process_status_signal(t_process *p, int status, t_job *j)
 		g_shell.exit_status = 128 + WTERMSIG(status);
 		if (WTERMSIG(status) - 1 <= SIGNAL_NUMBER_OSX &&
 			WTERMSIG(status) > 0)
-		{
-			if (is_signal_should_print(WTERMSIG(status)))
-				print_signal(sig_msgs[WTERMSIG(status) - 1], \
-				WTERMSIG(status), j);
-		}
+			print_signal(WTERMSIG(status), j);
 		else
 			ft_printf("%s: Unknown signal%d\n", SHELL_NAME, WTERMSIG(status));
+		p->notified = 1;
 	}
+	p->completed = 1;
 }
 
 int		mark_process_status_helper(

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init_terminal_stuff.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ihwang <ihwang@student.hive.fi>            +#+  +:+       +#+        */
+/*   By: dthan <dthan@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/12 23:20:08 by dthan             #+#    #+#             */
-/*   Updated: 2021/04/06 16:09:41 by ihwang           ###   ########.fr       */
+/*   Updated: 2021/04/07 18:29:26 by dthan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,6 +55,7 @@ int	init_signal_and_other_stuff(void)
 	g_shell.exit_status = 1;
 	g_shell.builtins = set_builtin_commands();
 	sig_controller(PARENT);
+	init_signal_messages(g_shell.signal_msgs);
 	return (EXIT_SUCCESS);
 }
 

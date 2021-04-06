@@ -6,7 +6,7 @@
 /*   By: dthan <dthan@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/05 05:54:54 by tango             #+#    #+#             */
-/*   Updated: 2021/03/20 16:38:42 by dthan            ###   ########.fr       */
+/*   Updated: 2021/04/06 23:33:01 by dthan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,6 +81,7 @@ typedef struct		s_shell
 	t_hash			*hashtable[MAX_HASH];
 	t_builtin		*builtins;
 	int				pipe_indicator;
+	char			*signal_msgs[SIGNAL_NUMBER_OSX];
 }					t_shell;
 t_shell				g_shell;
 

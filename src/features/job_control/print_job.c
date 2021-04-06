@@ -6,7 +6,7 @@
 /*   By: dthan <dthan@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/15 16:53:57 by dthan             #+#    #+#             */
-/*   Updated: 2021/03/30 19:40:53 by dthan            ###   ########.fr       */
+/*   Updated: 2021/04/07 00:26:18 by dthan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,10 +27,54 @@ void	format_job_info(t_job *j, const char *status, int opt)
 	ft_putchar('\n');
 }
 
+int		need_to_do_notification_completed_job(t_job *j)
+{
+	t_process *process_ptr;
+
+	if (j->foreground)
+		return (0);
+	process_ptr = j->first_process;
+	while (process_ptr)
+	{
+		if (!process_ptr->notified)
+			return (1);
+		process_ptr = process_ptr->next;
+	}
+	return (0);
+}
+
+void	prepare_notification_for_completed_job(t_job *j, char message[256])
+{
+	t_process *process_ptr;
+	char *temp;
+	
+	ft_bzero(message, 256);
+	ft_strcpy(message, "Done");
+	process_ptr = j->first_process;
+	while (process_ptr)
+	{
+		if (process_ptr->notified && WIFSIGNALED(process_ptr->status))
+		{
+			ft_strcat(message, "(");
+			temp = ft_itoa(WTERMSIG(process_ptr->status));
+			ft_strcat(message, temp);
+			temp ? free(temp) : 0;
+			ft_strcat(message, ")");
+			return ;
+		}
+		process_ptr = process_ptr->next;
+	}
+}
+
 void	do_job_notification_completed_job(t_job *j, t_job *jlast, t_job *jnext)
 {
-	if (!j->foreground)
-		format_job_info(j, "Done", 0);
+	char message[256];
+
+	if (need_to_do_notification_completed_job(j))
+	{
+		prepare_notification_for_completed_job(j, message);
+		format_job_info(j, message, 0);
+	}
 	if (jlast)
 		jlast->next = jnext;
 	else

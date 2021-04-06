@@ -6,7 +6,7 @@
 /*   By: dthan <dthan@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/13 12:05:30 by dthan             #+#    #+#             */
-/*   Updated: 2021/02/25 06:04:46 by dthan            ###   ########.fr       */
+/*   Updated: 2021/04/07 00:05:37 by dthan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,7 @@ t_process	*create_process(t_job *j)
 	process->completed = NOT_COMPLETED;
 	process->stopped = NOT_STOPPED;
 	process->status = UNAVAILABLE_STATUS;
+	process->notified = 0;
 	put_to_plist(process, &j->first_process);
 	return (process);
 }
