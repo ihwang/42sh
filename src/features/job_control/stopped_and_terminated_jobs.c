@@ -6,7 +6,7 @@
 /*   By: dthan <dthan@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/02 02:37:24 by dthan             #+#    #+#             */
-/*   Updated: 2021/04/07 00:38:29 by dthan            ###   ########.fr       */
+/*   Updated: 2021/04/07 00:47:44 by dthan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ void	print_signal(int sig_number, t_job *j)
 	char msgs[256];
 	char *numb;
 
-	if (j->foreground)
+	if (j->foreground && !job_is_stopped(j))
 	{
 		if (is_signal_should_print(sig_number))
 		{
