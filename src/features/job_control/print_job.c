@@ -6,7 +6,7 @@
 /*   By: dthan <dthan@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/15 16:53:57 by dthan             #+#    #+#             */
-/*   Updated: 2021/04/07 00:26:18 by dthan            ###   ########.fr       */
+/*   Updated: 2021/04/07 01:01:19 by dthan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,38 +43,12 @@ int		need_to_do_notification_completed_job(t_job *j)
 	return (0);
 }
 
-void	prepare_notification_for_completed_job(t_job *j, char message[256])
-{
-	t_process *process_ptr;
-	char *temp;
-	
-	ft_bzero(message, 256);
-	ft_strcpy(message, "Done");
-	process_ptr = j->first_process;
-	while (process_ptr)
-	{
-		if (process_ptr->notified && WIFSIGNALED(process_ptr->status))
-		{
-			ft_strcat(message, "(");
-			temp = ft_itoa(WTERMSIG(process_ptr->status));
-			ft_strcat(message, temp);
-			temp ? free(temp) : 0;
-			ft_strcat(message, ")");
-			return ;
-		}
-		process_ptr = process_ptr->next;
-	}
-}
-
 void	do_job_notification_completed_job(t_job *j, t_job *jlast, t_job *jnext)
 {
 	char message[256];
 
 	if (need_to_do_notification_completed_job(j))
-	{
-		prepare_notification_for_completed_job(j, message);
-		format_job_info(j, message, 0);
-	}
+		format_job_info(j, "Done", 0);
 	if (jlast)
 		jlast->next = jnext;
 	else
