@@ -6,7 +6,7 @@
 /*   By: dthan <dthan@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/04/15 23:35:55 by vgrankul          #+#    #+#             */
-/*   Updated: 2021/04/06 20:57:48 by dthan            ###   ########.fr       */
+/*   Updated: 2021/04/06 21:06:06 by dthan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,8 @@ int		is_alias(char *str, t_token *prev_token)
 	int i;
 
 	i = 0;
-	if (prev_token && (!is_control_op_not_newline(prev_token->type)) && prev_token->type != TOKEN_ASSIGNMENT_WORD)
+	if (prev_token && (!is_control_op_not_newline(prev_token->type)) &&
+		prev_token->type != TOKEN_ASSIGNMENT_WORD)
 		return (0);
 	if (g_shell.alias != NULL)
 	{
@@ -75,7 +76,9 @@ t_token	*alias_substitution(t_lexical_service *lex, char *fix_alias_name)
 
 	new_stream = NULL;
 	alias = find_alias2(lex->tk->data);
-	new_stream = lexical_analysis_service(alias->value, fix_alias_name, determine_sub_value(lex->tk->data, alias->value), lex->prev_tk);
+	new_stream = lexical_analysis_service(
+		alias->value, fix_alias_name, determine_sub_value(
+			lex->tk->data, alias->value), lex->prev_tk);
 	clear_token(lex->tk);
 	if (new_stream == NULL)
 		return (NULL);

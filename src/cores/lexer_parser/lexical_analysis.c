@@ -6,13 +6,14 @@
 /*   By: dthan <dthan@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/04/09 08:37:27 by dthan             #+#    #+#             */
-/*   Updated: 2021/04/06 20:49:44 by dthan            ###   ########.fr       */
+/*   Updated: 2021/04/06 21:06:49 by dthan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "shell.h"
 
-void	init_lexical_service_struct(t_lexical_service *self, t_token *prev_token)
+void	init_lexical_service_struct(
+	t_lexical_service *self, t_token *prev_token)
 {
 	self->i = 0;
 	self->stream = NULL;
@@ -43,7 +44,8 @@ t_token	*alias_infinite_loop(t_lexical_service *self, char *fix_alias_name)
 	return (self->tk);
 }
 
-t_token	*lexical_analysis_service(char *input, char *fix_alias_name, int sub, t_token *prev_token)
+t_token	*lexical_analysis_service(
+	char *input, char *fix_alias_name, int sub, t_token *prev_token)
 {
 	t_lexical_service self;
 
